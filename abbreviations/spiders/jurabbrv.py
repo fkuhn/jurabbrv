@@ -1,10 +1,13 @@
 
-
-from items import JurabbrvItem
+import scrapy
+from scrapy.contrib.spiders import CrawlSpider
+from abbreviations.items import JurabbrvItem
 from string import ascii_lowercase
+from lxml import etree
+
 
 class OpenJurSpider(CrawlSpider):
-    name = "jurabbrv"
+    name = "abbreviations"
     allowed_domains = ['juristische-abkuerzungen.de']
     # start_urls = [
     #    'https://openjur.de/u-%d.html' % decimal
@@ -29,22 +32,18 @@ class OpenJurSpider(CrawlSpider):
         abbreviations = list()
 
         # <tr>
-        #    <td width="150" valign="top"><a name="AöR">AöR</a></td>
-        #    <td width="350">Archiv des öffentlichen Rechts (Zeitschrift)</td>
+        #    <td width="150" valign="top"><a name="AoeR">AoeR</a></td>
+        #    <td width="350">Archiv des oeffentlichen Rechts (Zeitschrift)</td>
         # </tr>
 
+        for entry in tree.iter('tr'):
 
-        for table in tree.iter('TABLE'):
+            if len(entry) == 2 and entry.find('td').get('valign'):
+                entry_tds = entry.findall('td')
+                item = JurabbrvItem()
+                item['abbrev'] = entry_tds[0].get('name')
+                item['paraphrase'] = entry_tds[1].text
 
-            item = JurabbrvItem()
-
-                for entryelem in table.iter('tr'):
-
-                    if entryelem.attrib['width'] == '150':
-                        item['abbrev'] = entryelem.text
-                    elif entryelem.attrib('width') == '300':
-                        item['paraphrase'] = entryelem.text
-                if entryelem['abbrev']:
-                    abbreviations.append(item)
+                abbreviations.append(item)
 
         return abbreviations

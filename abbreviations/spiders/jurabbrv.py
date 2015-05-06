@@ -42,7 +42,7 @@ class OpenJurSpider(CrawlSpider):
                 entry_tds = entry.findall('td')
                 item = JurabbrvItem()
                 item['abbrev'] = entry_tds[0].get('name')
-                item['paraphrase'] = entry_tds[1].text
+                # item['paraphrase'] = entry_tds[1].text
 
                 abbreviations.append(item)
 

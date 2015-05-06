@@ -5,12 +5,13 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+from scrapy import Item
+from scrapy import Field
 
 
-class JurabbrvItem(scrapy.Item):
+class JurabbrvItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    abbrev = scrapy.Field()
+    abbrev = Field()
     # paraphrase = scrapy.Field()
 

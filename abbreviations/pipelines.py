@@ -12,11 +12,11 @@ class JurabbrvPipeline(object):
 
     def __init__(self):
 
-        self.abbrvfile = codecs.open('/tmp/legal_abbrv.jl', encoding='utf-8', mode='wb')
+        self.abbrvfile = codecs.open('/tmp/legal_abbrv.txt', encoding='utf-8', mode='wb')
 
     def process_item(self, item, spider):
 
-        line = json.dumps(dict(item)) + "\n"
+        line = unicode(item['abbrev']) + "\n"
 
         self.abbrvfile.write(line)
 

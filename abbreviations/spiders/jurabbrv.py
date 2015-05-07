@@ -6,7 +6,7 @@ from string import ascii_lowercase
 from lxml import etree
 
 
-class OpenJurSpider(CrawlSpider):
+class OpenJurSpider(scrapy.Spider):
     name = "abbreviations"
     allowed_domains = ['juristische-abkuerzungen.de']
     # start_urls = [
@@ -36,14 +36,6 @@ class OpenJurSpider(CrawlSpider):
         #    <td width="350">Archiv des oeffentlichen Rechts (Zeitschrift)</td>
         # </tr>
 
-        for entry in tree.iter('tr'):
+        for entry in tree.xpath('//a/@name'):
 
-            if len(entry) == 2 and entry.find('td').get('valign'):
-                entry_tds = entry.findall('td')
-                item = JurabbrvItem()
-                item['abbrev'] = entry_tds[0].get('name')
-                # item['paraphrase'] = entry_tds[1].text
-
-                abbreviations.append(item)
-
-        return abbreviations
+            yield JurabbrvItem(abbrev=unicode(entry))

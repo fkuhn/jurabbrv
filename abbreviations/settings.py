@@ -20,7 +20,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
     'random_useragent.RandomUserAgentMiddleware': 400
 }
-USER_AGENT_LIST = "/home/kuhn/Data/openlaws/repos/openjurscraper/user_agents.txt"
+USER_AGENT_LIST = "/home/kuhn/Data/GitHub/jurabbrv/user_agents.txt"
 
 AUTOTHROTTLE_ENABLED = True
 

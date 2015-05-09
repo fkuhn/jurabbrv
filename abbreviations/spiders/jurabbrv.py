@@ -16,7 +16,7 @@ class OpenJurSpider(scrapy.Spider):
 
     def start_requests(self):
         """
-        iterate over all pages that link to documents
+        iterate over all pages that contain abbreviations
         :return:
         """
 
@@ -39,3 +39,26 @@ class OpenJurSpider(scrapy.Spider):
         for entry in tree.xpath('//a/@name'):
 
             yield JurabbrvItem(abbrev=unicode(entry))
+
+
+class CommonAbbreviations(scrapy.Spider):
+    name= "commonabbrev"
+    allowed_domains = ['http://www.german-translation-tips-and-resources.com']
+    max_pages = 10
+
+    def start_requests(self):
+        """
+
+        :return:
+        """
+        scrapy.Request('http://www.german-translation-tips-and-resources.com/german-abbreviations-1.html')
+
+    def parse(self, response):
+
+        html_parser = etree.HTMLParser()
+        tree = etree.fromstring(response.body, parser=html_parser)
+
+        for entry in tree.xpath('//table/tr/td/text()'):
+
+            yield JurabbrvItem(abbrev=unicode(entry))
+

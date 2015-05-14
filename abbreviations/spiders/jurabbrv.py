@@ -42,23 +42,30 @@ class OpenJurSpider(scrapy.Spider):
 
 
 class CommonAbbreviations(scrapy.Spider):
-    name= "commonabbrev"
-    allowed_domains = ['http://www.german-translation-tips-and-resources.com']
-    max_pages = 10
+    name = "commonabbrev"
+    allowed_domains = ['german-translation-tips-and-resources.com']
+    # max_pages = 10
 
     def start_requests(self):
         """
 
         :return:
         """
-        scrapy.Request('http://www.german-translation-tips-and-resources.com/german-abbreviations-1.html')
+        # /table[1]/tr[1]/td[1]/th[2]/a[1]/br[1]/table[1]/tr[2]/td[1]
+        # <table border="1" cellpadding="7" align="center">
+        #
+        # <tr><th>A</th><th></th><th></th></tr>
+        # <tr><td>A      </td><td>Ampere</td><td>	ampere</td></tr>
+        # <tr><td>a	</td><td>	andere(s)</td><td>	other(s)</td></tr>
+        # <tr><td>a.A. </td><td>auf Anfrage </td><td>on request (e.g. price information)
+
+        yield scrapy.Request('http://www.german-translation-tips-and-resources.com/german-abbreviations-1.html')
 
     def parse(self, response):
 
         html_parser = etree.HTMLParser()
         tree = etree.fromstring(response.body, parser=html_parser)
 
-        for entry in tree.xpath('//table/tr/td/text()'):
+        for entry in tree.xpath("//table[@border=1]/tr/td[1]/text()"):
 
             yield JurabbrvItem(abbrev=unicode(entry))
-
